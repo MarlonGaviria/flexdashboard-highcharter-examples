@@ -1,5 +1,5 @@
 ---
-title: "Flex Dashboard & Highcharter"
+title: "Flexdashboard & Highcharter"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
