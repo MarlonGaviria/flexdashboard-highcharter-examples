@@ -1,11 +1,11 @@
 ---
-title: "Flexdashboard & Highcharter"
+title: "Sales Report with Highcharter"
+author: "Joshua Kunst"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    css: styles.css
-    social: [ "twitter", "facebook", "linkedin", "google-plus" ]
-    source_code: "https://github.com/jbkunst/flexdashboard-highcharter-example"
+    social: [ "twitter", "facebook" ]
+    source_code: "https://git.io/v2H3E"
 ---
 
 <!-- Learn more about flexdashboard at https://rstudio.github.io/flexdashboard -->
@@ -19,17 +19,14 @@ library("viridisLite")
 library("forecast")
 library("treemap")
 
-fnt <- list(fontFamily = "Source Sans Pro")
-
-thm <- hc_theme_merge(
-  hc_theme_538(),
+thm <- 
   hc_theme(
     chart = list(
       backgroundColor = "transparent",
-      style = fnt
-      ),
-    yAxis = list(labels = list(style = fnt)),
-    xAxis = list(labels = list(style = fnt))
+      style = list(fontFamily = "Source Sans Pro")
+    ),
+    xAxis = list(
+      gridLineWidth = 1
     )
   )
 
@@ -60,7 +57,7 @@ USArrests <- USArrests %>%
 n <- 4
 colstops <- data.frame(
   q = 0:n/n,
-  c = substring(viridis(n + 1, option = "B"), 0, 7)) %>%
+  c = substring(viridis(n + 1, option = "D"), 0, 7)) %>%
   list.parse2()
 
 highchart() %>%
@@ -96,7 +93,7 @@ dfitemsg <- dfitems %>%
 
 tm <- treemap(dfitemsg, index = c("category", "subcategory"),
               vSize = "sales", vColor = "sales",
-              type = "value", palette = viridis(6, option = "B"))
+              type = "value", palette = viridis(6, option = "D"))
 
 highchart() %>% 
   hc_add_series_treemap(tm, allowDrillToNode = TRUE,
