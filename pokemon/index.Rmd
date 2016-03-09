@@ -1,0 +1,43 @@
+---
+title: "Pokemon Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    social: menu
+    css: styles.css
+    source_code: https://github.com/jbkunst/r-posts/tree/master/033-pokemon
+---
+
+
+```{r setup, include=FALSE}
+library("highcharter")
+load(file = "hcpkmn.RData")
+```
+
+    
+Column {data-width=600}
+-------------------------------------
+    
+### t-SNE algorithm
+    
+```{r}
+hctsne
+```
+   
+Column {data-width=400}
+-------------------------------------
+   
+### Species count by main type
+
+```{r}
+hcbar
+```   
+ 
+### Types treemap
+    
+```{r}
+hctmpkmn
+```
+
+<script>
+$(".navbar-brand").css("color", "#3662AC");
+</script>

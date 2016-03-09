@@ -1,0 +1,14 @@
+@font-face {
+    font-family: Pokemon;
+    src: url(PokemonSolid.ttf);
+}
+
+.navbar-inverse {
+    background-color: #FFCA05;
+    border-color: #FFCA05;
+}
+
+.navbar-brand {
+    font-family: 'Pokemon';
+    color: "#3662AC";
+}
