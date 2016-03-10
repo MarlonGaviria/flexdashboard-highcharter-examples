@@ -38,6 +38,4 @@ hcbar
 hctmpkmn
 ```
 
-<script>
-$(".navbar-brand").css("color", "#3662AC");
-</script>
+<!--<script>$(".navbar-brand").css("color", "#3662AC");</script>-->
