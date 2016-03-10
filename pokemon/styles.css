@@ -8,7 +8,7 @@
     border-color: #FFCA05;
 }
 
-.navbar-brand {
+.navbar-inverse .navbar-brand {
     font-family: 'Pokemon';
-    color: "#3662AC";
+    color: #2780e3;
 }
