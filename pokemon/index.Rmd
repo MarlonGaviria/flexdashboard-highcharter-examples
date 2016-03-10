@@ -2,9 +2,9 @@
 title: "Pokemon Dashboard"
 output: 
   flexdashboard::flex_dashboard:
-    social: menu
+    social: [ "twitter", "facebook", "linkedin", "pinterest" ]
     css: styles.css
-    source_code: https://github.com/jbkunst/r-posts/tree/master/033-pokemon
+    source_code: http://jkunst.com/r/pokemon-visualize-em-all/
 ---
 
 
