@@ -1,0 +1,71 @@
+---
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+  
+---
+
+```{r setup, include=FALSE}
+library("flexdashboard")
+library("highcharter")
+library("dplyr")
+library("readr")
+library("ggplot2")
+
+urldata <- "https://raw.githubusercontent.com/data-is-plural/nuclear-explosions/master/data/sipri-report-explosions.csv"
+df <- read_csv(urldata)
+df <- df %>% 
+  mutate(date = as.Date(as.character(date_long), format = "%Y%m%d"),
+         country  = sub("^(PAKIST|INDIA)$", "INDIA & PAKISTAN", country)) %>% 
+  arrange(date) %>% 
+  group_by(country) %>% 
+  mutate(rn = row_number()) %>% 
+  ungroup()
+    
+ggplot(df) + geom_line(aes(date, rn, color = country)) + scale_y_sqrt()
+
+ggplot(df) + geom_point(aes(date, country, color = country), size = 3, alpha = 0.25)
+
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### 
+
+```{r}
+hc <- highchart()
+for (c in unique(df$country)){
+  df2 <- df %>% filter(country == c)
+  hc <- hc %>% hc_add_series_times_values(df2$date, df2$rn, name = c)
+}
+hc
+```
+
+###
+
+```{r}
+df2 <- df %>% count(country) %>% arrange(desc(n))
+hc <- highchart() %>% 
+  hc_chart(type = "column") %>% 
+  hc_xAxis(categories = df2$country) %>% 
+  hc_add_series_labels_values(df2$country, df2$n, colorByPoint = TRUE)
+hc
+```
+
+Row
+-----------------------------------------------------------------------
+
+###
+
+```{r}
+# Code for Chart B
+```
+
+###
+
+```{r}
+# Code for Chart C
+```
+
