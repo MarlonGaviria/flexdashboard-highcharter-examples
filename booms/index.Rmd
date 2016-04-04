@@ -1,6 +1,7 @@
 ---
 output: 
   flexdashboard::flex_dashboard:
+    css: styles.css
     orientation: rows
   
 ---
@@ -10,6 +11,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 library("flexdashboard")
 library("highcharter")
 library("dplyr")
+library("tidyr")
+library("purrr")
 library("readr")
 library("ggplot2")
 
@@ -26,7 +29,9 @@ df <- df %>%
 ggplot(df) + geom_line(aes(date, rn, color = country)) + scale_y_sqrt()
 ggplot(df) + geom_point(aes(date, country, color = country), size = 3, alpha = 0.25)
 
-
+thm <- hc_theme(
+  chart = list(backgroundColor = "#2B2B2B")
+  )
 ```
 
 Row
@@ -52,7 +57,7 @@ dfbooms <- df %>%
 boomsjson <- geojson_json(dfbooms, lat = "latitude", lon = "longitude")
 
 highchart(type = "map") %>% 
-  hc_chart(backgroundColor = "#2B2B2B") %>% 
+  hc_add_theme(thm) %>% 
   hc_plotOptions(
     series = list(
       showInLegend = FALSE
@@ -66,12 +71,6 @@ highchart(type = "map") %>%
 
 ```
 
-###
-
-```{r}
-# Code for Chart C
-```
-
 Row
 -----------------------------------------------------------------------
 
@@ -79,8 +78,13 @@ Row
 
 ```{r}
 hc <- highchart() %>% 
-  hc_legend(enabled = FALSE)
-for (c in unique(df$country)){
+  hc_add_theme(thm) %>% 
+  hc_legend(enabled = FALSE) %>%
+  hc_yAxis(max = 1200) %>% 
+  hc_plotOptions(
+    series = list(animation = list(duration = 10*1000))
+  )
+for (c in unique(df$country)) {
   df2 <- df %>% filter(country == c)
   hc <- hc %>% hc_add_series_times_values(df2$date, df2$rn, name = c)
 }
@@ -90,11 +94,56 @@ hc
 ###
 
 ```{r}
+dfexp <- df %>%
+  select(country, year) %>% 
+  distinct() %>% 
+  expand(country, year) %>% 
+  left_join(
+    df %>% 
+      group_by(country, year) %>% 
+      summarize(nb = n()) %>% 
+      ungroup(),
+    by = c("country", "year")
+    ) %>% 
+  mutate(nb = ifelse(is.na(nb), 0, nb)) %>% 
+  arrange(country, year) %>% 
+  group_by(country) %>%
+  mutate(nbcum = cumsum(nb))
+
+# dfexp %>% group_by(country) %>% summarise(nb = sum(nb)) %>% arrange(desc(nb))
+# df %>% count(country) %>% arrange(desc(n))
+
+ds <- dfexp %>% 
+  group_by(country) %>% 
+  do(seq = list(sequence = .$nbcum)) %>%
+  ungroup() %>% 
+  .$seq
+
+orderls <- ds %>% map(function(x) tail(x[[1]], 1)) %>% 
+  unlist() %>% 
+  order(decreasing = TRUE)
+  
+ds <- ds[orderls]
+
 df2 <- df %>% count(country) %>% arrange(desc(n))
-hc <- highchart() %>% 
-  hc_legend(enabled = FALSE) %>% 
+
+highchart() %>% 
+  hc_add_theme(thm) %>% 
   hc_chart(type = "column") %>% 
   hc_xAxis(categories = df2$country) %>% 
-  hc_add_series_labels_values(df2$country, df2$n, colorByPoint = TRUE)
-hc
+  hc_yAxis(max = 1200) %>% 
+  hc_add_series(name = "B", data = ds, colorByPoint = TRUE,
+                showInLegend = FALSE
+                ) %>% 
+  hc_motion(enabled = TRUE,
+            updateInerval = 50,
+            autoPlay = TRUE,
+            labels = unique(dfexp$year))
+# df2 <- df %>% count(country) %>% arrange(desc(n))
+# hc <- highchart() %>%
+#   hc_legend(enabled = FALSE) %>%
+#   hc_chart(type = "column") %>%
+#   hc_xAxis(categories = df2$country) %>%
+#   hc_add_series_labels_values(df2$country, df2$n, colorByPoint = TRUE)
+# hc
 ```
