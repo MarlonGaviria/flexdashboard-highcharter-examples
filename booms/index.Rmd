@@ -30,7 +30,8 @@ ggplot(df) + geom_line(aes(date, rn, color = country)) + scale_y_sqrt()
 ggplot(df) + geom_point(aes(date, country, color = country), size = 3, alpha = 0.25)
 
 thm <- hc_theme(
-  chart = list(backgroundColor = "#2B2B2B")
+  chart = list(backgroundColor = "#2B2B2B"),
+  colors = c("#E71409", "#337DBA", "#49B044", "#9B4BA7", "#A55B12", "#ACAD1F", "#302C2A")
   )
 ```
 
