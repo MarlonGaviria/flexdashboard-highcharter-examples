@@ -13,12 +13,15 @@ folders <- files %>%
 
 links <- data_frame(files, folders) %>% 
   by_row(function(x){
-    as.character(tags$a(x$folders, src = x$files))
+    as.character(tags$a(x$folders, href = x$files, target = "_blank"))
   }, .to = "link") %>% 
   .$link %>% 
   unlist()
 
 writeLines(links, "scripts/index.md")
-rmarkdown::render("scripts/index.md", output_file = "../index.html")
+rmarkdown::render("scripts/index.md", output_file = "../index.html",
+                  output_options = list(
+                    theme = "flatly",
+                    title = "Some Ideas Highcharter + Flexdashboard"))
 
   
