@@ -4,6 +4,7 @@ library("htmltools")
 library("purrr")
 
 files <- dir(pattern = "index.html", recursive = TRUE, full.names = TRUE)
+files <- setdiff(files, "./index.html")
 
 folders <- files %>% 
   str_extract( "/.*/") %>% 
@@ -13,15 +14,20 @@ folders <- files %>%
 
 links <- data_frame(files, folders) %>% 
   by_row(function(x){
-    as.character(tags$a(x$folders, href = x$files, target = "_blank"))
+    tags$a(x$folders, href = x$files, target = "_blank") %>% 
+      tags$h5() %>% 
+      as.character()
   }, .to = "link") %>% 
   .$link %>% 
   unlist()
 
 writeLines(links, "scripts/index.md")
-rmarkdown::render("scripts/index.md", output_file = "../index.html",
-                  output_options = list(
+rmarkdown::render("scripts/index.md",
+                  output_file = "../index.html",
+                  clean = TRUE,
+                  params = list(
                     theme = "flatly",
-                    title = "Some Ideas Highcharter + Flexdashboard"))
+                    title = "Some Ideas Highcharter + Flexdashboard")
+                  )
 
   
