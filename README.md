@@ -2,4 +2,7 @@
 
 highcharter examples via http://rstudio.github.io/flexdashboard/
 
-http://jkunst.com/flexdashboard-highcharter-examples/
+see:
+
+http://jkunst.com/flexdashboard-highcharter-examples/index.html
+
