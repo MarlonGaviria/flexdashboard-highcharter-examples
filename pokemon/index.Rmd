@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     social: [ "twitter", "facebook", "linkedin", "pinterest" ]
     css: styles.css
-    source_code: http://jkunst.com/r/pokemon-visualize-em-all/
+    source_code: https://github.com/jbkunst/flexdashboard-highcharter-examples/tree/gh-pages/pokemon
 ---
 
 
