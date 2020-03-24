@@ -35,5 +35,16 @@ hcbar
 ### Types treemap
     
 ```{r}
-hctmpkmn
+hctmpkmn %>% 
+  hc_plotOptions(
+    series  = list(
+      borderWidth = 0.5, 
+      dataLabels = list(
+        style = list(
+          fontSize = "12px",
+          textOutline = FALSE
+          )
+        )
+      )
+    )
 ```
